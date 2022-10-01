@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 30-09-2022 a las 22:25:54
+-- Tiempo de generación: 01-10-2022 a las 06:11:31
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 8.1.6
 
@@ -25,6 +25,16 @@ DELIMITER $$
 --
 -- Procedimientos
 --
+CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizarNota` (IN `codigo` VARCHAR(255), IN `tipo` VARCHAR(255), IN `periodo` VARCHAR(255), IN `nid_profesor` VARCHAR(100), IN `codigo_asignatura` VARCHAR(100), IN `curso` VARCHAR(50), IN `nid_estudiante` VARCHAR(100), IN `calificacion` DOUBLE, IN `anotacion` TEXT, IN `estado` VARCHAR(250))   UPDATE notas SET notas.periodo_notas = periodo, notas.nid_profesor = nid_profesor, notas.codigo_asignatura = codigo_asignatura, notas.curso_notas = curso, notas.nid_estudiante = nid_estudiante, notas.calificacion_notas = calificacion, notas.anotacion_notas = anotacion, notas.estado_notas = estado, notas.tipo_notas = tipo where notas.codigo_notas = codigo$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `agregarNota` (IN `codigo` VARCHAR(255), IN `tipo` VARCHAR(255), IN `periodo` VARCHAR(255), IN `nid_profesor` VARCHAR(100), IN `codigo_asignatura` VARCHAR(100), IN `curso` VARCHAR(50), IN `nid_estudiante` VARCHAR(100), IN `calificacion` DOUBLE, IN `anotacion` TEXT, IN `estado` VARCHAR(250))   INSERT INTO notas
+(notas.codigo_notas, notas.tipo_notas, notas.periodo_notas, notas.nid_profesor, notas.codigo_asignatura, notas.curso_notas, notas.nid_estudiante, notas.calificacion_notas, notas.anotacion_notas, notas.estado_notas)
+VALUES(codigo, tipo, periodo, nid_profesor, codigo_asignatura, curso, nid_estudiante, calificacion, anotacion, estado)$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `cambiarEstadoNota` (IN `codigo` VARCHAR(100), IN `estado` VARCHAR(100))   UPDATE notas
+SET notas.estado_notas = estado
+WHERE notas.codigo_notas = codigo$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `obtenerAllEstudiantes` ()   SELECT *
 from estudiante$$
 
@@ -36,7 +46,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `obtenerMateria` (IN `codigoMateria`
 FROM asignatura as a 
 WHERE a.codigo_asignatura = codigoMateria$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `obtenerNotasEstudiante` (IN `codigoEstudiante` VARCHAR(50))   SELECT n.codigo_notas as codigo_notas, n.periodo_notas as periodo_notas, concat(p.nombres_profesor," ", p.apellidos_profesor) as nombre_profesor, a.nombre_asignatura as asignatura, n.curso_notas as curso, concat(e.nombres_estudiante, " ", e.apellidos_estudiante) as nombre_estudiante, n.calificacion_notas as calificacion, n.anotacion_notas as anotacion, n.estado_notas as estado_notas 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `obtenerNotasEstudiante` (IN `codigoEstudiante` VARCHAR(50))   SELECT n.id_notas as id,  n.codigo_notas as codigo_notas, n.periodo_notas as periodo_notas, concat(p.nombres_profesor," ", p.apellidos_profesor) as nombre_profesor, a.nombre_asignatura as asignatura, n.curso_notas as curso, concat(e.nombres_estudiante, " ", e.apellidos_estudiante) as nombre_estudiante, n.calificacion_notas as calificacion, n.anotacion_notas as anotacion, n.estado_notas as estado_notas, n.tipo_notas as tipo
 FROM notas as n
 INNER JOIN profesor as p ON p.nid_profesor = n.nid_profesor
 INNER JOIN asignatura as a ON n.codigo_asignatura = a.codigo_asignatura
@@ -47,9 +57,17 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `obtenerProfesor` (IN `codigoProfeso
 FROM profesor as p
 WHERE p.nid_profesor = codigoProfesor and p.estado_profesor = 'activo'$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `obtenerProfesores` ()   SELECT *
+FROM profesor
+WHERE profesor.estado_profesor = 'activo'$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `obtenerUsuario` (IN `codigoUsuario` VARCHAR(50))   SELECT *
 FROM user
-WHERE user.codigo_user = codigoUsuario and user.codigo_user = "activo"$$
+WHERE user.codigo_user = codigoUsuario and user.estado_user = "activo"$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `obtenerUsuarios` ()   SELECT *
+FROM user
+WHERE user.estado_user = 'activo'$$
 
 DELIMITER ;
 
@@ -68,6 +86,13 @@ CREATE TABLE `asignatura` (
   `creador_codigo_user` varchar(255) NOT NULL,
   `nota_asignatura` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `asignatura`
+--
+
+INSERT INTO `asignatura` (`id_asignatura`, `codigo_asignatura`, `nombre_asignatura`, `estado_asignatura`, `fecha_creacion_asignatura`, `creador_codigo_user`, `nota_asignatura`) VALUES
+(1, 'ING01', 'Ingles', 'activo', '2022-10-01 02:43:05', 'ADMIN01', NULL);
 
 -- --------------------------------------------------------
 
@@ -109,10 +134,20 @@ CREATE TABLE `notas` (
   `codigo_asignatura` varchar(255) NOT NULL,
   `curso_notas` varchar(255) NOT NULL,
   `nid_estudiante` varchar(255) NOT NULL,
-  `calificacion_notas` varchar(255) NOT NULL,
+  `calificacion_notas` double NOT NULL,
   `anotacion_notas` text DEFAULT NULL,
-  `estado_notas` varchar(255) NOT NULL
+  `estado_notas` varchar(255) NOT NULL,
+  `tipo_notas` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `notas`
+--
+
+INSERT INTO `notas` (`id_notas`, `codigo_notas`, `periodo_notas`, `nid_profesor`, `codigo_asignatura`, `curso_notas`, `nid_estudiante`, `calificacion_notas`, `anotacion_notas`, `estado_notas`, `tipo_notas`) VALUES
+(1, 'NA01ING', '01', '124214555', 'ING01', '10B', '15782030', 8.6, 'Falta mejorar en los tiempos', 'activo', 'TALLER'),
+(2, 'N2030', '01', '124214555', 'ING01', '10B', '15782030', 9, '', 'activo', 'PARCIAL'),
+(3, '21SA4D', '02', '124214555', 'ING01', '11A', '15782030', 10, '', 'activo', 'TALLER');
 
 -- --------------------------------------------------------
 
@@ -163,7 +198,8 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id_user`, `tipo_user`, `codigo_user`, `username_user`, `password_user`, `fecha_creacion_user`, `estado_user`, `nota_user`) VALUES
-(1, 'admin', 'ADMIN01', 'admin', 'admin123', '2022-09-30 20:52:44', 'activo', NULL);
+(1, 'admin', 'ADMIN01', 'admin', 'admin123', '2022-09-30 20:52:44', 'activo', NULL),
+(2, 'profesor', 'PKI2010B', 'karlimdavid97', 'kurdaeta', '2022-10-01 03:35:33', 'activo', NULL);
 
 -- --------------------------------------------------------
 
@@ -259,7 +295,7 @@ ALTER TABLE `user_profesor`
 -- AUTO_INCREMENT de la tabla `asignatura`
 --
 ALTER TABLE `asignatura`
-  MODIFY `id_asignatura` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_asignatura` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `estudiante`
@@ -271,7 +307,7 @@ ALTER TABLE `estudiante`
 -- AUTO_INCREMENT de la tabla `notas`
 --
 ALTER TABLE `notas`
-  MODIFY `id_notas` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_notas` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `profesor`
@@ -283,7 +319,7 @@ ALTER TABLE `profesor`
 -- AUTO_INCREMENT de la tabla `user`
 --
 ALTER TABLE `user`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `user_estudiante`
