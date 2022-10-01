@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 01-10-2022 a las 06:11:31
+-- Tiempo de generación: 01-10-2022 a las 06:50:03
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 8.1.6
 
@@ -45,6 +45,10 @@ WHERE e.nid_estudiante = codigoEstudiante$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `obtenerMateria` (IN `codigoMateria` VARCHAR(50))   SELECT * 
 FROM asignatura as a 
 WHERE a.codigo_asignatura = codigoMateria$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `obtenerMaterias` ()   SELECT *
+FROM asignatura
+where asignatura.estado_asignatura = 'activo'$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `obtenerNotasEstudiante` (IN `codigoEstudiante` VARCHAR(50))   SELECT n.id_notas as id,  n.codigo_notas as codigo_notas, n.periodo_notas as periodo_notas, concat(p.nombres_profesor," ", p.apellidos_profesor) as nombre_profesor, a.nombre_asignatura as asignatura, n.curso_notas as curso, concat(e.nombres_estudiante, " ", e.apellidos_estudiante) as nombre_estudiante, n.calificacion_notas as calificacion, n.anotacion_notas as anotacion, n.estado_notas as estado_notas, n.tipo_notas as tipo
 FROM notas as n
@@ -92,7 +96,9 @@ CREATE TABLE `asignatura` (
 --
 
 INSERT INTO `asignatura` (`id_asignatura`, `codigo_asignatura`, `nombre_asignatura`, `estado_asignatura`, `fecha_creacion_asignatura`, `creador_codigo_user`, `nota_asignatura`) VALUES
-(1, 'ING01', 'Ingles', 'activo', '2022-10-01 02:43:05', 'ADMIN01', NULL);
+(1, 'ING01', 'Ingles', 'activo', '2022-10-01 02:43:05', 'ADMIN01', NULL),
+(2, 'MAT01N', 'Matematicas', 'activo', '2022-10-01 06:39:09', 'ADMIN01', NULL),
+(3, 'QUI01F', 'Quimica', 'activo', '2022-10-01 06:39:09', 'ADMIN01', NULL);
 
 -- --------------------------------------------------------
 
@@ -118,7 +124,9 @@ CREATE TABLE `estudiante` (
 --
 
 INSERT INTO `estudiante` (`id_estudiante`, `tipoid_estudiante`, `nid_estudiante`, `nacionalidad_estudiante`, `nombres_estudiante`, `apellidos_estudiante`, `fecha_nac_estudiante`, `fecha_creacion_estudiante`, `creador_codigo_user`, `estado_estudiante`) VALUES
-(1, 'TI', '15782030', 'COLOMBIANA', 'Juan Alfonso', 'Carrillo Aristisaval', '2008-09-09', '2022-09-30 22:07:23', 'ADMIN01', 'activo');
+(1, 'TI', '15782030', 'COLOMBIANA', 'Juan Alfonso', 'Carrillo Aristisaval', '2008-09-09', '2022-09-30 22:07:23', 'ADMIN01', 'activo'),
+(2, 'TI', '118127481', 'COLOMBIANA', 'ALFREDO', 'CASTILLO', '2009-09-06', '2022-10-01 06:32:53', 'ADMIN01', 'activo'),
+(3, 'TI', '1181540481', 'COLOMBIANA', 'SANTIAGO', 'JIMENEZ', '2009-05-20', '2022-10-01 06:32:53', 'ADMIN01', 'activo');
 
 -- --------------------------------------------------------
 
@@ -174,7 +182,9 @@ CREATE TABLE `profesor` (
 --
 
 INSERT INTO `profesor` (`id_profesor`, `tipoid_profesor`, `nid_profesor`, `nacionalidad_profesor`, `nombres_profesor`, `apellidos_profesor`, `fecha_nac_profesor`, `fecha_creacion_profesor`, `creador_codigo_user`, `estado_profesor`, `nota_profesor`) VALUES
-(1, 'CC', '124214555', 'COLOMBIANA', 'Karlim David', 'Urdaeta', '1998-08-20', '2022-09-30 20:53:58', 'ADMIN01', 'activo', 'Profesor de ingles');
+(1, 'CC', '124214555', 'COLOMBIANA', 'Karlim David', 'Urdaeta', '1998-08-20', '2022-09-30 20:53:58', 'ADMIN01', 'activo', 'Profesor de ingles'),
+(2, 'CC', '199092094', 'COLOMBIANA', 'Juan Andres', 'Reales', '1979-09-12', '2022-10-01 06:34:51', 'ADMIN01', 'activo', 'Profesor de matematicas'),
+(3, 'CC', '1990921244', 'COLOMBIANA', 'Antonio Andres', 'Carrizal Jimenez', '1990-12-10', '2022-10-01 06:34:51', 'ADMIN01', 'activo', 'Profesor de Quimica');
 
 -- --------------------------------------------------------
 
@@ -295,13 +305,13 @@ ALTER TABLE `user_profesor`
 -- AUTO_INCREMENT de la tabla `asignatura`
 --
 ALTER TABLE `asignatura`
-  MODIFY `id_asignatura` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_asignatura` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `estudiante`
 --
 ALTER TABLE `estudiante`
-  MODIFY `id_estudiante` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_estudiante` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `notas`
@@ -313,7 +323,7 @@ ALTER TABLE `notas`
 -- AUTO_INCREMENT de la tabla `profesor`
 --
 ALTER TABLE `profesor`
-  MODIFY `id_profesor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_profesor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `user`

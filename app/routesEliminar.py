@@ -4,14 +4,14 @@ from app import eliminar
 
 @cross_origin
 @app.route('/eliminarNota', methods=['PUT'])
-def actualizarNota():
+def eliminarNota():
     try:
         if request.method == 'PUT':
             dic = {
                 'codigo' : request.json['codigo'],
                 'estado' : request.json['estado']
             }
-            return eliminar.actualizarNota(dic)
+            return eliminar.eliminarNota(dic)
 
     except Exception as e:
         print(e)
