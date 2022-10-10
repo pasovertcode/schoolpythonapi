@@ -11,16 +11,7 @@ def consultarEstudiantes():
         data = []
         for resultado in res:
             data.append(
-                {
-                    'id': resultado[0],
-                    'tipo_id': resultado[1],
-                    'codigo': resultado[2],
-                    'nacionalidad': resultado[3],
-                    'nombres': resultado[4],
-                    'apellidos': resultado[5],
-                    'fecha_nacimiento': resultado[6],
-                    'estado': resultado[9]
-                }
+                resultado
             )
 
         return jsonify(data)
@@ -39,16 +30,7 @@ def consultarEstudiante(codigoEstudiante):
         data = []
         for resultado in res:
             data.append(
-                {
-                    'id': resultado[0],
-                    'tipo_id': resultado[1],
-                    'codigo': resultado[2],
-                    'nacionalidad': resultado[3],
-                    'nombres': resultado[4],
-                    'apellidos': resultado[5],
-                    'fecha_nacimiento': resultado[6],
-                    'estado': resultado[9]
-                }
+                resultado
             )
 
         return jsonify(data)
@@ -69,8 +51,8 @@ def consultarUsuarios():
         res = cur.fetchall()
         data = []
         for resultado in res:
-            print(resultado)
-            aux = {
+            
+            """ aux = {
                     'id': resultado[0],
                     'tipo_usuario': resultado[1],
                     'codigo': resultado[2],
@@ -79,8 +61,8 @@ def consultarUsuarios():
                     'fecha_creacion': resultado[5],
                     'estado': resultado[6],
                     'nota': resultado[7]
-                }
-            data.append(aux)
+                } """
+            data.append(resultado)
 
         return jsonify(data)
 
@@ -99,16 +81,7 @@ def consultarUsuario(codigoUsuario):
         data = []
         for resultado in res:
             data.append(
-                {
-                    'id': resultado[0],
-                    'tipo_usuario': resultado[1],
-                    'codigo': resultado[2],
-                    'username': resultado[3],
-                    'password': resultado[4],
-                    'fecha_creacion': resultado[5],
-                    'estado': resultado[6],
-                    'nota': resultado[7]
-                }
+                resultado
             )
 
         return jsonify(data)
@@ -131,12 +104,7 @@ def consultarMateria(codigoMateria):
         data = []
         for resultado in res:
             data.append(
-                {
-                    'id': resultado[0],
-                    'codigo': resultado[1],
-                    'nombre': resultado[2],
-                    'estado': resultado[3]
-                }
+                resultado
             )
 
         return jsonify(data)
@@ -155,12 +123,7 @@ def consultarMaterias():
         data = []
         for resultado in res:
             data.append(
-                {
-                    'id': resultado[0],
-                    'codigo': resultado[1],
-                    'nombre': resultado[2],
-                    'estado': resultado[3]
-                }
+                resultado
             )
 
         return jsonify(data)
@@ -183,19 +146,7 @@ def consultarNotasEstudiante(codigoEstudiante):
         data = []
         for resultado in res:
             data.append(
-                {
-                    'id': resultado[0],
-                    'codigo': resultado[1],
-                    'periodo': resultado[2],
-                    'tipo': resultado[10],
-                    'nombre_profesor': resultado[3],
-                    'asignatura': resultado[4],
-                    'curso': resultado[5],
-                    'nombre_Estudiante': resultado[6],
-                    'calificacion': resultado[7],
-                    'anotacion': resultado[8],
-                    'estado': resultado[9]
-                }
+                resultado
             )
 
         return jsonify(data)
@@ -218,16 +169,7 @@ def consultarProfesores():
         data = []
         for resultado in res:
             data.append(
-                {
-                    'id': resultado[0],
-                    'tipo_id': resultado[1],
-                    'codigo': resultado[2],
-                    'nacionalidad': resultado[3],
-                    'nombres': resultado[4],
-                    'apellidos': resultado[5],
-                    'fecha_nacimiento': resultado[6],
-                    'estado': resultado[10]
-                }
+                resultado
             )
 
         return jsonify(data)
@@ -247,16 +189,45 @@ def consultarProfesor(codigoProfesor):
         data = []
         for resultado in res:
             data.append(
-                {
-                    'id': resultado[0],
-                    'tipo_id': resultado[1],
-                    'codigo': resultado[2],
-                    'nacionalidad': resultado[3],
-                    'nombres': resultado[4],
-                    'apellidos': resultado[5],
-                    'fecha_nacimiento': resultado[6],
-                    'estado': resultado[10]
-                }
+                resultado
+            )
+
+        return jsonify(data)
+
+    except Exception as e:
+        print(e)
+    finally:
+        cur.close()
+
+## PARCIAL 2
+
+def accionParcial(accion):
+    opciones = {
+        1: 'call obtenerEstudiantesMayorNota()',
+        2: 'call obtenerUsuariosProfesores()',
+        3: 'call obtenerNombreProfesor_Nota()',
+        4: 'call obtenerEst_Pro_Mat_TipoNota()',
+        5: 'call obtenerUsuario_TipoNota()',
+        6: 'call obtenerEst_Pro_Mat_Curso()',
+        7: 'call obtenerPromedioMat()',
+        8: 'call obtenerConteoEstudiantes_Curso()',
+        9: 'call sumaCalificaciones_Materia()',
+        10: 'call obtenerUserPw_Prof_Mat()',
+        11: 'call est_prof_mat_esp_notas()',
+        12: 'call obtenerProcDobleCondicional()'
+        }
+    return opciones[accion]
+
+def consultaParcial2(n):
+    try:
+        cur = mysql.connection.cursor()
+        sql = accionParcial(n)
+        cur.execute(sql)
+        res = cur.fetchall()
+        data = []
+        for resultado in res:
+            data.append(
+                resultado
             )
 
         return jsonify(data)

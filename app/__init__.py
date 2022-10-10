@@ -7,8 +7,11 @@ app = Flask(__name__)
 app.config.from_object(app.config)
 CORS(app)
 
-from app import routesObtener
+from app import gestorRoutes
+
+
+""" from app import routesObtener
 from app import routesAgregar
 from app import routesActualizar
 from app import routesEliminar
-from app import consultas
+from app import consultas """
