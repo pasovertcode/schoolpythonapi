@@ -13,8 +13,9 @@ from app import actualizar
 @app.route('/managerNotas', methods=['GET','POST','PUT'])
 def managerNotas(cod_estudiante = None, id = None):
         try:
-            id = int(id)
+            
             if id != None:
+                id = int(id)
                 if id >= 1 and id <= 12:
                     return consultas.consultaParcial2(id)
                 return jsonify({'Información': 'El ID debe ser entre 1 y 12.'})
